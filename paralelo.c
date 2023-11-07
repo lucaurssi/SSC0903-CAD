@@ -89,7 +89,9 @@ void print_mat(int **mat, int IMG_SIZE){
 	return;
 }
 
-int main () {
+int main (int argc, char **argv) {
+	
+	int T = atoi(argv[1]); // number of threads
 	
 	int IMG_SIZE = 10000;
 	srand(1);
@@ -122,36 +124,40 @@ int main () {
 	double wtime;
 	wtime = omp_get_wtime();
 	
+	#pragma omp parallel num_threads(T)	
+	{
+		// Apply Gaussian Smoothing
+		#pragma omp for
+		for(int i=0; i<IMG_SIZE; i++)
+			for(int j=0; j<IMG_SIZE; j++)
+				new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
+
+
+
+		// Fiding the max & min
+		#pragma omp for reduction(max:max) reduction(min:min)
+		for(int i=0; i<IMG_SIZE; i++)
+			for(int j=0; j<IMG_SIZE; j++)
+				if(new_mat[i][j]>max) max = new_mat[i][j];
+				else if(new_mat[i][j]<min) min = new_mat[i][j];
+
+		#pragma omp single
+		mean = (int)(max+min)/2;
+
 	
-	// Apply Gaussian Smoothing
-	for(int i=0; i<IMG_SIZE; i++)
-		for(int j=0; j<IMG_SIZE; j++)
-			new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
-	
-	//print_mat(new_mat, IMG_SIZE);
-
-
-
-	// Fiding the max & min
-	for(int i=0; i<IMG_SIZE; i++)
-		for(int j=0; j<IMG_SIZE; j++)
-			if(new_mat[i][j]>max) max = new_mat[i][j];
-			else if(new_mat[i][j]<min) min = new_mat[i][j];
-
-	mean = (int)(max+min)/2;
-
-	// binary
-	for(int i=0; i<IMG_SIZE; i++)
-		for(int j=0; j<IMG_SIZE; j++)
-			if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
-			else new_mat[i][j] = 1;
-	
+		// binary
+		#pragma omp for
+		for(int i=0; i<IMG_SIZE; i++)
+			for(int j=0; j<IMG_SIZE; j++)
+				if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
+				else new_mat[i][j] = 1;
+	}
 	//printf("mean: %d\n", mean);
 	//print_mat(new_mat, IMG_SIZE);
 	
 	
 	wtime = omp_get_wtime() - wtime; 
-	printf("Sequential time = %.5f\n", wtime );
+	printf("Parallel, %d thread(s) time = %.5f\n", T, wtime );
 	
 // -------     Image processing area end here     ------- 
 	

@@ -9,7 +9,7 @@
  
  Apos aplicar o filtro buscamos pelos maiores e 
  menores valores para binarizar a imagem, 
- criando uma imagem de duas cores.
+ criando uma imagem de duas cores. (1 & 0)
  
 */
 

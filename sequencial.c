@@ -1,6 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
-
+/*
+ SSC0903 - Computação de Alto Desempenho (2023-2) BCC-Turma B
+ Luca Gomes Urssi - 10425396
+ 
+ Escolhemos gerar uma matriz aleatoria e 
+ aplicar um filtro de suzvizacao Gaussiano.
+ 
+ Apos aplicar o filtro buscamos pelos maiores e 
+ menores valores para binarizar a imagem, 
+ criando uma imagem de duas cores.
+ 
+*/
 
 /*
 	Gaussian Smoothing:
@@ -70,6 +81,7 @@ void print_mat(int **mat, int IMG_SIZE){
 			printf("%d ", mat[i][j]);
 		printf("\n");
 	}
+	printf("\n");
 	fflush(stdout);
 	return;
 }
@@ -78,6 +90,10 @@ int main () {
 	
 	int IMG_SIZE = 5;
 	srand(1);
+	
+	int max =0;
+	int min =256;
+	int mean;
 	
 	// create image matrix - initialized with zeros
 	int **mat = (int**)calloc (IMG_SIZE, sizeof (int*));
@@ -89,21 +105,45 @@ int main () {
 	for (int i=0; i < IMG_SIZE; i++)
 		new_mat[i] = (int*)calloc (IMG_SIZE, sizeof (int));
 
-	
 	// populating 'mat' with random values between 0-255
 	for(int i=0; i<IMG_SIZE; i++)
 		for(int j=0; j<IMG_SIZE; j++)
 			mat[i][j] = rand()%256;
-	
+
+
 	//print_mat(mat, IMG_SIZE);
+	//print_mat(new_mat, IMG_SIZE);
+
+// -------     Image processing area begin here     ------- 
 	
 	// Apply Gaussian Smoothing
 	for(int i=0; i<IMG_SIZE; i++)
 		for(int j=0; j<IMG_SIZE; j++)
 			new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
-		
 	
 	//print_mat(new_mat, IMG_SIZE);
+
+
+
+	// Fiding the max & min
+	for(int i=0; i<IMG_SIZE; i++)
+		for(int j=0; j<IMG_SIZE; j++)
+			if(new_mat[i][j]>max) max = new_mat[i][j];
+			else if(new_mat[i][j]<min) min = new_mat[i][j];
+
+	mean = (int)(max+min)/2;
+
+	// binary
+	for(int i=0; i<IMG_SIZE; i++)
+		for(int j=0; j<IMG_SIZE; j++)
+			if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
+			else new_mat[i][j] = 1;
+	
+	//printf("mean: %d\n", mean);
+	//print_mat(new_mat, IMG_SIZE);
+
+// -------     Image processing area end here     ------- 
+
 	
 	for(int i=0; i<IMG_SIZE; i++){
 		free(mat[i]);

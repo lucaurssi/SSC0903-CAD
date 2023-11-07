@@ -1,6 +1,5 @@
 all:
-	gcc -Wall -o seq sequencial.c -fopenmp
-	
+	gcc -Wall -o seq sequencial.c 
 run: 
 	./seq
 	

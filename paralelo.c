@@ -95,9 +95,10 @@ void print_mat(int **mat, int IMG_SIZE){
 
 int main (int argc, char **argv) {
 	
-	int T = atoi(argv[1]); // number of threads
 	
-	int IMG_SIZE = 10000;
+	
+	int IMG_SIZE = atoi(argv[1]);
+	int T = atoi(argv[2]); // number of threads
 	srand(1);
 	
 	int max =0;
@@ -126,42 +127,47 @@ int main (int argc, char **argv) {
 // -------     Image processing area begin here     ------- 
 	
 	double wtime;
-	wtime = omp_get_wtime();
 	
-	#pragma omp parallel num_threads(T)	
-	{
-		// Apply Gaussian Smoothing
-		#pragma omp for
-		for(int i=0; i<IMG_SIZE; i++)
-			for(int j=0; j<IMG_SIZE; j++)
-				new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
-
-
-
-		// Fiding the max & min
-		#pragma omp for reduction(max:max) reduction(min:min)
-		for(int i=0; i<IMG_SIZE; i++)
-			for(int j=0; j<IMG_SIZE; j++)
-				if(new_mat[i][j]>max) max = new_mat[i][j];
-				else if(new_mat[i][j]<min) min = new_mat[i][j];
-
-		#pragma omp single
-		mean = (int)(max+min)/2;
-
+	double total_time = 0;
 	
-		// binary
-		#pragma omp for
-		for(int i=0; i<IMG_SIZE; i++)
-			for(int j=0; j<IMG_SIZE; j++)
-				if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
-				else new_mat[i][j] = 1;
+	for(int k=0; k<100; k++){
+		wtime = omp_get_wtime();
+		#pragma omp parallel num_threads(T)	
+		{
+			// Apply Gaussian Smoothing
+			#pragma omp for
+			for(int i=0; i<IMG_SIZE; i++)
+				for(int j=0; j<IMG_SIZE; j++)
+					new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
+
+
+
+			// Fiding the max & min
+			#pragma omp for reduction(max:max) reduction(min:min)
+			for(int i=0; i<IMG_SIZE; i++)
+				for(int j=0; j<IMG_SIZE; j++)
+					if(new_mat[i][j]>max) max = new_mat[i][j];
+					else if(new_mat[i][j]<min) min = new_mat[i][j];
+
+			#pragma omp single
+			mean = (int)(max+min)/2;
+
+		
+			// binary
+			#pragma omp for
+			for(int i=0; i<IMG_SIZE; i++)
+				for(int j=0; j<IMG_SIZE; j++)
+					if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
+					else new_mat[i][j] = 1;
+		}
+		//printf("mean: %d\n", mean);
+		//print_mat(new_mat, IMG_SIZE);
+		
+		
+		wtime = omp_get_wtime() - wtime; 
+		total_time += wtime;
 	}
-	//printf("mean: %d\n", mean);
-	//print_mat(new_mat, IMG_SIZE);
-	
-	
-	wtime = omp_get_wtime() - wtime; 
-	printf("Parallel, %d thread(s) time = %.5f\n", T, wtime );
+	printf("%d thread(s)= %.5f\n", T, total_time/100 );
 	
 // -------     Image processing area end here     ------- 
 	

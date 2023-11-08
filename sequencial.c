@@ -93,9 +93,9 @@ void print_mat(int **mat, int IMG_SIZE){
 	return;
 }
 
-int main () {
+int main (int argc, char **argv) {
 	
-	int IMG_SIZE = 10000;
+	int IMG_SIZE = atoi(argv[1]);
 	srand(1);
 	
 	int max =0;
@@ -124,38 +124,42 @@ int main () {
 // -------     Image processing area begin here     ------- 
 	
 	double wtime;
-	wtime = omp_get_wtime();
+	double total_time = 0;
 	
-	
-	// Apply Gaussian Smoothing
-	for(int i=0; i<IMG_SIZE; i++)
-		for(int j=0; j<IMG_SIZE; j++)
-			new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
-	
-	//print_mat(new_mat, IMG_SIZE);
+	for(int k=0; k<100; k++){
+		wtime = omp_get_wtime();
+		
+		// Apply Gaussian Smoothing
+		for(int i=0; i<IMG_SIZE; i++)
+			for(int j=0; j<IMG_SIZE; j++)
+				new_mat[i][j] = smoothing(mat, IMG_SIZE, i, j); // smooth one position at a time
+		
+		//print_mat(new_mat, IMG_SIZE);
 
 
 
-	// Fiding the max & min
-	for(int i=0; i<IMG_SIZE; i++)
-		for(int j=0; j<IMG_SIZE; j++)
-			if(new_mat[i][j]>max) max = new_mat[i][j];
-			else if(new_mat[i][j]<min) min = new_mat[i][j];
+		// Fiding the max & min
+		for(int i=0; i<IMG_SIZE; i++)
+			for(int j=0; j<IMG_SIZE; j++)
+				if(new_mat[i][j]>max) max = new_mat[i][j];
+				else if(new_mat[i][j]<min) min = new_mat[i][j];
 
-	mean = (int)(max+min)/2;
+		mean = (int)(max+min)/2;
 
-	// binary
-	for(int i=0; i<IMG_SIZE; i++)
-		for(int j=0; j<IMG_SIZE; j++)
-			if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
-			else new_mat[i][j] = 1;
-	
-	//printf("mean: %d\n", mean);
-	//print_mat(new_mat, IMG_SIZE);
-	
-	
-	wtime = omp_get_wtime() - wtime; 
-	printf("Sequential time = %.5f\n", wtime );
+		// binary
+		for(int i=0; i<IMG_SIZE; i++)
+			for(int j=0; j<IMG_SIZE; j++)
+				if(new_mat[i][j] <= mean) new_mat[i][j] = 0;
+				else new_mat[i][j] = 1;
+		
+		//printf("mean: %d\n", mean);
+		//print_mat(new_mat, IMG_SIZE);
+		
+		
+		wtime = omp_get_wtime() - wtime;
+		total_time += wtime;
+	}
+	printf("Sequential= %.5f\n", total_time/100 );
 	
 // -------     Image processing area end here     ------- 
 	

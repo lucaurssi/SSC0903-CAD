@@ -8,7 +8,4 @@ Membros:
 - Luca Gomes Urssi, 10425396
 - Victor Lucas de Almeida Fernandes, 12675399
 
-Escolhemos gerar uma matriz aleatoria e aplicar um filtro de suavizacao Gaussiano.
-
-Apos aplicar o filtro buscamos pelos maiores e menores valores para binarizar a imagem, criando uma imagem de duas cores. (1 & 0)
-
+Google docs do Relatório : [Link](https://docs.google.com/document/d/1GIudGpMWVbEO9j-rbtrSZ79t60AkfvKRwmeAdRE6r8c/edit?usp=sharing)

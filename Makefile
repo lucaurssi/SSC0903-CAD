@@ -1,4 +1,4 @@
-IMG = 10000
+IMG = 1000
 
 all:
 	gcc -Wall -o seq sequencial.c -fopenmp

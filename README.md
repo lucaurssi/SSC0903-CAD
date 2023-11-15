@@ -8,4 +8,14 @@ Membros:
 - Luca Gomes Urssi, 10425396
 - Victor Lucas de Almeida Fernandes, 12675399
 
-Google docs do Relatório : [Link](https://docs.google.com/document/d/1GIudGpMWVbEO9j-rbtrSZ79t60AkfvKRwmeAdRE6r8c/edit?usp=sharing)
+Intruções:
+
+	# Para compilar ambos os codigos:
+	- make 
+	
+	# Para executar com imagem de tamanho 1000x1000:
+	- make run  
+	
+	# Para executar com tamanhos diferentes, substitua 'K' por um numero:
+	- make run IMG=K 
+	

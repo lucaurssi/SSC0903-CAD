@@ -1,0 +1,20 @@
+./seq 10
+Sequential= 0.00000
+./par 10 1
+1 thread(s)= 0.00000
+./par 10 2
+2 thread(s)= 0.00000
+./par 10 4
+4 thread(s)= 0.00000
+./par 10 6
+6 thread(s)= 0.00011
+./par 10 8
+8 thread(s)= 0.00013
+./par 10 10
+10 thread(s)= 0.00016
+./par 10 12
+12 thread(s)= 0.00017
+./par 10 14
+14 thread(s)= 0.00018
+./par 10 16
+16 thread(s)= 0.00021

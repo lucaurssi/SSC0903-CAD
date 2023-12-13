@@ -1,8 +1,13 @@
-code=16a
+IMG = 1000
 np=2
 
 all:
-	mpicc $(code).c -o bin -Wall
+	gcc -Wall -o seq sequential.c
+run: 
+	./seq $(IMG)
+	
+par:
+	mpicc par.c -o par -Wall
 
-run:
-	mpirun -np $(np) ./bin
+run_par:
+	mpirun -np $(np) ./par $(IMG)

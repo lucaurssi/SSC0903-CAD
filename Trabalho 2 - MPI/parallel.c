@@ -81,10 +81,9 @@ int main(int argc, char *argv[]){
 	MPI_Reduce(&max, &global_max, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
 	MPI_Reduce(&min, &global_min, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
 	MPI_Reduce(&sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-	for(int i=0; i<MAT_SIZE; i++){	
-		MPI_Reduce(&sum_lin[i], &global_lin[i], 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-		MPI_Reduce(&sum_col[i], &global_col[i], 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-	}
+	MPI_Reduce(sum_lin, global_lin, MAT_SIZE, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	MPI_Reduce(sum_col, global_col, MAT_SIZE, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	
 	
 	
 	double total_time = (double)(clock() - time)/CLOCKS_PER_SEC;

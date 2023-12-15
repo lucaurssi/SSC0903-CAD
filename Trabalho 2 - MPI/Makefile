@@ -1,13 +1,14 @@
 IMG = 1000
-np=2
+PAR = parallel
+NP  = 2
 
 all:
 	gcc -Wall -o seq sequential.c
+	mpicc $(PAR).c -o par -Wall
+
 run: 
 	./seq $(IMG)
-	
-par:
-	mpicc par.c -o par -Wall
+	mpirun -np $(NP) --hostfile hosts-halley ./par $(IMG)
 
-run_par:
-	mpirun -np $(np) ./par $(IMG)
+local:
+	mpirun -np $(NP) ./par $(IMG)

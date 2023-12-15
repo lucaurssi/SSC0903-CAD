@@ -12,9 +12,12 @@ Membros:
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+#define PRINT 0
 
 int main(int argc, char *argv[]){
-	
+
 	int MAT_SIZE = atoi(argv[1]);
 	
 	// create matrix - initialized with zeros
@@ -32,7 +35,9 @@ int main(int argc, char *argv[]){
 	int sum = 0;
 	int *sum_lin = (int*)calloc (MAT_SIZE, sizeof (int));
 	int *sum_col = (int*)calloc (MAT_SIZE, sizeof (int));
-	
+
+    clock_t time = clock();
+
 	for(int i=0; i<MAT_SIZE; i++)
 		for(int j=0; j<MAT_SIZE; j++){
 			if(mat[i][j] > max) 
@@ -46,17 +51,21 @@ int main(int argc, char *argv[]){
 			sum_lin[j] += mat[i][j];
 			sum_col[i] += mat[i][j];
 		}
-	
-	printf("max : %d\n", max);
-	printf("min : %d\n", min);
-	printf("sum : %d\n", sum);
-	printf("sum_lin :\n");
-	for(int i=0; i<MAT_SIZE; i++)
-		;//printf("%d ", sum_lin[i]);
-	printf("\nsum_col :\n");
-	for(int i=0; i<MAT_SIZE; i++)
-		;//printf("%d ", sum_col[i]);
-	
+
+    double total_time = (double)(clock() - time)/CLOCKS_PER_SEC;
+    printf("time: %f\n", total_time);	
+
+    if(PRINT){
+	    printf("max : %d\n", max);
+	    printf("min : %d\n", min);
+	    printf("sum : %d\n", sum);
+	    printf("sum_lin :\n");
+	    for(int i=0; i<MAT_SIZE; i++)
+		    ;//printf("%d ", sum_lin[i]);
+	    printf("\nsum_col :\n");
+	    for(int i=0; i<MAT_SIZE; i++)
+		    ;//printf("%d ", sum_col[i]);
+	}
 	
 	
 	

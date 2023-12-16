@@ -13,7 +13,7 @@ Intruções:
 	# Para compilar ambos os codigos:
 	- make 
 	
-	# Para executar com imagem de tamanho 1000x1000 e NP 2:
+	# Para executar com matriz de tamanho 1000x1000 e NP 2:
 	- make run  
 	
 	# Para executar com tamanhos diferentes, substitua 'K' por um numero:
